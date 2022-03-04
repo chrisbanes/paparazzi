@@ -32,7 +32,6 @@ dependencies {
   compileOnly files('libs/lifecycle-runtime-2.4.0.jar')
   compileOnly files('libs/savedstate-1.1.0.jar')
 
-  api deps.layoutlib.native.jdk11
   api deps.tools.common
   api deps.tools.layoutlib
   api deps.tools.sdkcommon
@@ -50,23 +49,33 @@ dependencies {
   implementation deps.jcodec.javase
   implementation project(':paparazzi-agent')
 
-  def osName = System.getProperty("os.name").toLowerCase(Locale.US)
-  if (osName.startsWith("mac")) {
-    def osArch = System.getProperty("os.arch").toLowerCase(Locale.US)
-    if (osArch.startsWith("x86")) {
-      unzip deps.layoutlib.native.macOsX
-    } else {
-      unzip deps.layoutlib.native.macArm
-    }
-  } else if (osName.startsWith("windows")) {
-    unzip deps.layoutlib.native.windows
+  if (project.version.endsWith('SNAPSHOT')) {
+    unzip "${determineLayoutLibDependency()}-SNAPSHOT"
+    api "${deps.layoutlib.native.jdk11}-SNAPSHOT"
   } else {
-    unzip deps.layoutlib.native.linux
+    unzip determineLayoutLibDependency()
+    api deps.layoutlib.native.jdk11
   }
 
   testImplementation deps.assertj
 
   add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, deps.compose.compiler)
+}
+
+private String determineLayoutLibDependency() {
+  def osName = System.getProperty("os.name").toLowerCase(Locale.US)
+  if (osName.startsWith("mac")) {
+    def osArch = System.getProperty("os.arch").toLowerCase(Locale.US)
+    if (osArch.startsWith("x86")) {
+      return deps.layoutlib.native.macOsX
+    } else {
+      return deps.layoutlib.native.macArm
+    }
+  } else if (osName.startsWith("windows")) {
+    return deps.layoutlib.native.windows
+  } else {
+    return deps.layoutlib.native.linux
+  }
 }
 
 tasks.named("dokkaGfm").configure {
