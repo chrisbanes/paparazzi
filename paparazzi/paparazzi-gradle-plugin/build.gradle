@@ -5,7 +5,7 @@ apply plugin: 'com.vanniktech.maven.publish'
 gradlePlugin {
   plugins {
     paparazzi {
-      id = 'app.cash.paparazzi'
+      id = 'dev.chrisbanes.paparazzi'
       implementationClass = 'app.cash.paparazzi.gradle.PaparazziPlugin'
     }
   }
