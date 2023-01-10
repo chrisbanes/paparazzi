@@ -12,6 +12,7 @@ captures
 build
 build-cache
 generated
+bin
 
 # Mkdocs files
 docs/1.x
