@@ -1,5 +1,5 @@
 plugins {
-  id 'app.cash.paparazzi'
+  id 'dev.chrisbanes.paparazzi'
   id 'com.android.library' // intentionally declared after paparazzi plugin
 }
 
